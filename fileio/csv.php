@@ -26,12 +26,12 @@ class Red_Csv_File extends Red_FileIO {
 			);
 
 			$csv = array_map( array( $this, 'escape_csv' ), $csv );
-			fwrite( $stdout, join( $csv, ',') );
+			fwrite( $stdout, join( $csv, ',').PHP_EOL);
 		}
 	}
 
 	private function escape_csv( $item ) {
-		return '"'.str_replace( '"', '""', $item ).'"';
+		return '"'.str_replace( '"', '""', addslashes($item) ).'"';
 	}
 
 	function load( $group, $data, $filename = '' ) {
@@ -45,6 +45,7 @@ class Red_Csv_File extends Red_FileIO {
 						'source' => trim( $csv[0] ),
 						'target' => trim( $csv[1] ),
 						'regex'  => $this->is_regex( $csv[0] ),
+						'action_code' => isset( $csv[4] ) ? intval( $csv[4], 10 ) : 301,
 						'group_id'  => $group,
 						'match'  => 'url',
 						'red_action' => 'url',
